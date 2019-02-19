@@ -6,15 +6,13 @@
 package com.traceable.poi.repositories;
 
 import com.traceable.poi.domain.Meeting;
-import com.traceable.poi.domain.PointInterest;
-import java.util.List;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author Wesley Fermino <wesleycz@live.com>
  * Feb 17 2019
  */
-public interface MeetingRepository extends CrudRepository<Meeting, Integer> {
-
+public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
+    
 }

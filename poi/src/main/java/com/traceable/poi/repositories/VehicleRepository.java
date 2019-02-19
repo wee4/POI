@@ -6,7 +6,6 @@
 package com.traceable.poi.repositories;
 
 import com.traceable.poi.domain.Vehicle;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +16,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
-    
-    public List<Vehicle> findByName(String name);
     
 }

@@ -5,7 +5,9 @@
  */
 package com.traceable.poi;
 
+import com.traceable.poi.domain.Vehicle;
 import com.traceable.poi.repositories.VehicleRepository;
+import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +36,8 @@ public class RepositoryIntegrationTest {
 
     @Test
     public void databaseContentTest() {
-        assertThat(repository.findAll()).isNotNull();
+        List<Vehicle> findAll = repository.findAll();
+        assertThat(findAll).isNotNull();
     }
 
 }

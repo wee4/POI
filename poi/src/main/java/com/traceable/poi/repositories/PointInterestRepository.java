@@ -6,15 +6,14 @@
 package com.traceable.poi.repositories;
 
 import com.traceable.poi.domain.PointInterest;
-import java.util.List;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author Wesley Fermino <wesleycz@live.com>
  * Feb 17 2019
  */
-public interface PointInterestRepository extends CrudRepository<PointInterest, Integer> {
+public interface PointInterestRepository extends JpaRepository<PointInterest, Integer> {
 
 
 }

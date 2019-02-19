@@ -10,14 +10,17 @@ import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  *
@@ -26,7 +29,8 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "positions")
-@SequenceGenerator(name = "positions_id_seq", initialValue = 1, allocationSize = 100)
+@SequenceGenerator(name = "positions_id_seq", initialValue = 1, allocationSize = 10000)
+@EntityListeners(AuditingEntityListener.class)
 public class Position implements Serializable {
 
     @Id
@@ -46,6 +50,7 @@ public class Position implements Serializable {
     private Double latitude;
 
     @ManyToOne
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
     @Column(name = "ignition")

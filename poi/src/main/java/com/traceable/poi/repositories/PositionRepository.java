@@ -6,14 +6,12 @@
 package com.traceable.poi.repositories;
 
 import com.traceable.poi.domain.Position;
-import java.util.List;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author Wesley Fermino <wesleycz@live.com>
  * Feb 17 2019
  */
-public interface PositionRepository extends CrudRepository<Position, Integer> {
-
+public interface PositionRepository extends JpaRepository<Position, Integer> {
 }
