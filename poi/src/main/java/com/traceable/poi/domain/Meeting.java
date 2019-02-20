@@ -6,19 +6,15 @@
 package com.traceable.poi.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 /**
  *
@@ -26,7 +22,7 @@ import javax.persistence.Transient;
  * Feb 17 2019
  */
 @Entity
-@Table(name = "Meeting")
+@Table(name = "meeting")
 @SequenceGenerator(name = "meeting_id_seq", initialValue = 1, allocationSize = 100)
 public class Meeting implements Serializable {
 
@@ -34,19 +30,13 @@ public class Meeting implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "meeting_id_seq")
     private Integer id;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "point_interest_id")
     private PointInterest interest;
 
-    @OneToOne
-    private Vehicle vehicle;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "check_in")
-    private Date checkIn;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "check_out")
-    private Date checkOut;
+    @ManyToOne
+    @JoinColumn(name = "position_id")
+    private Position position;
 
     public Integer getId() {
         return id;
@@ -62,30 +52,6 @@ public class Meeting implements Serializable {
 
     public void setInterest(PointInterest interest) {
         this.interest = interest;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
-
-    public Date getCheckIn() {
-        return checkIn;
-    }
-
-    public void setCheckIn(Date checkIn) {
-        this.checkIn = checkIn;
-    }
-
-    public Date getCheckOut() {
-        return checkOut;
-    }
-
-    public void setCheckOut(Date checkOut) {
-        this.checkOut = checkOut;
     }
 
     @Override
@@ -115,7 +81,15 @@ public class Meeting implements Serializable {
 
     @Override
     public String toString() {
-        return "Meeting{" + "id=" + id + ", interest=" + interest + ", vehicle=" + vehicle + ", checkIn=" + checkIn + ", checkOut=" + checkOut + '}';
+        return "Meeting{" + "id=" + id + ", interest=" + interest + ", position=" + position + '}';
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
 }

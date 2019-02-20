@@ -6,14 +6,12 @@
 package com.traceable.poi.domain;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -42,9 +40,6 @@ public class PointInterest implements Serializable {
 
     @Column(name = "longitude")
     private Double longitude;
-
-    @OneToMany(targetEntity = Meeting.class)
-    private List<Meeting> meetings;
 
     public Integer getId() {
         return id;
@@ -113,15 +108,7 @@ public class PointInterest implements Serializable {
 
     @Override
     public String toString() {
-        return "PointInterest{" + "id=" + id + ", name=" + name + ", radius=" + radius + ", latitude=" + latitude + ", longitude=" + longitude + ", meetings=" + meetings + '}';
-    }
-
-    public List<Meeting> getMeetings() {
-        return meetings;
-    }
-
-    public void setMeetings(List<Meeting> meetings) {
-        this.meetings = meetings;
+        return "PointInterest{" + "id=" + id + ", name=" + name + ", radius=" + radius + ", latitude=" + latitude + ", longitude=" + longitude + '}';
     }
 
 }

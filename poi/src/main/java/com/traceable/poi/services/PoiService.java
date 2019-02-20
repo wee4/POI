@@ -8,10 +8,9 @@ package com.traceable.poi.services;
 import com.traceable.poi.domain.Meeting;
 import com.traceable.poi.domain.PointInterest;
 import com.traceable.poi.domain.Position;
-import com.traceable.poi.domain.Vehicle;
 import com.traceable.poi.repositories.MeetingRepository;
+import com.traceable.poi.repositories.PointInterestRepository;
 import com.traceable.poi.repositories.PositionRepository;
-import com.traceable.poi.repositories.VehicleRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -29,57 +28,52 @@ public class PoiService {
     private static final Logger LOG = LoggerFactory.getLogger(PoiService.class);
 
     @Autowired
-    private VehicleRepository vehicleRepository;
-
-    @Autowired
     private MeetingRepository meetingRepository;
 
     @Autowired
     private PositionRepository positionRepository;
 
-    private List<PointInterest> interests = new ArrayList<>();
+    @Autowired
+    private PointInterestRepository interestRepository;
 
-    /**
-     *
-     * @param vehicle
-     * @param interests
-     * @return
-     */
-    public List<Meeting> getMeetingsBy(Vehicle vehicle, List<PointInterest> interests) {
-        this.interests = interests;
-        //calculate(vehicle);
-        // [TO - DO]
-        return null;
-    }
 
-    public List<Position> getPositionsBy(Vehicle vehicle) {
+
+    public List<Meeting> calculate() {
         List<Position> positions = positionRepository.findAll();
-        positions.removeIf((Position pos) -> {
-            return !pos.getVehicle().equals(vehicle);
-        });
+        List<PointInterest> interests = interestRepository.findAll();
+        List<Meeting> generatedMeetings = generateMeetings(positions, interests);
 
-        return positions;
+        return generatedMeetings;
     }
 
-    /**
-     *
-     * @param vehicle
-     * @return
-     */
-    public List<Meeting> getAllMeetingsBy(Vehicle vehicle) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private List<Meeting> generateMeetings(List<Position> positions, List<PointInterest> interests) {
+        List<Meeting> lst = new ArrayList<>();
+
+        for (PointInterest inter : interests) {
+            for (Position position : positions) {
+                if (verifyMeeting(position, inter)) {
+                    Meeting m = new Meeting();
+                    m.setInterest(inter);
+                    m.setPosition(position);
+                    lst.add(m);
+                }
+            }
+        }
+
+        try {
+            meetingRepository.saveAll(lst);
+            return lst;
+        } catch (Exception e) {
+            LOG.error("Exception on save: {} ", e);
+            return new ArrayList<>();
+        }
     }
 
-    private List<Meeting> calculate(Vehicle vehicle) {
-        // pegar a lista de pontos
-        //pegar lista de ponto de interesse
-        // criar metodo verifica se o ponto esta dentro da area de interesse
-        //se retornar true, salvar no banco na tabela meeting o ponto e a area de interesse
-
+    private boolean verifyMeeting(Position pos, PointInterest interests) {
         /**
-         * [TO - DO]
+         * lógica de cálculo do círculo
          */
-        return null;
+        return false;
     }
 
 }

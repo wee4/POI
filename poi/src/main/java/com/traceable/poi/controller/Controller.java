@@ -5,8 +5,9 @@
  */
 package com.traceable.poi.controller;
 
-import com.traceable.poi.domain.Position;
+import com.traceable.poi.domain.Meeting;
 import com.traceable.poi.domain.Vehicle;
+import com.traceable.poi.repositories.MeetingRepository;
 import com.traceable.poi.repositories.VehicleRepository;
 import com.traceable.poi.services.PoiService;
 import java.util.List;
@@ -25,22 +26,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class Controller {
-    
+
     @Autowired
     private PoiService service;
-    
+
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private MeetingRepository meetingRepository;
 
     @GetMapping(value = "/vehicles")
     public List<Vehicle> getAllVehicles() {
         return vehicleRepository.findAll();
     }
-    
-    @GetMapping(value = "/positions/{id}")
-    public List<Position> getPositionsByVehicle(@PathVariable(value="id") Integer vehicleId) {
+
+    @GetMapping(value = "/meetings/{vehicle_id}")
+    public List<Meeting> getMeetingsByVehicle(@PathVariable(value = "vehicle_id") Integer vehicleId) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(vehicleId);
-        return service.getPositionsBy(vehicle.get());
+        Vehicle v = vehicle.get();
+        List<Meeting> list = meetingRepository.findAll();
+        list.removeIf((Meeting t) -> !t.getPosition().getVehicle().equals(v));
+
+        return list;
     }
-    
+
+    @GetMapping(value = "/meetings")
+    public List<Meeting> getMeetings() {
+        List<Meeting> list = meetingRepository.findAll();
+        if (list.isEmpty()) {
+            service.calculate();
+        }
+        return list;
+    }
+
 }
