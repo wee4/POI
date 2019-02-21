@@ -23,7 +23,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "meeting")
-@SequenceGenerator(name = "meeting_id_seq", initialValue = 1, allocationSize = 100)
+@SequenceGenerator(name = "meeting_id_seq", initialValue = 1, allocationSize = 1)
 public class Meeting implements Serializable {
 
     @Id

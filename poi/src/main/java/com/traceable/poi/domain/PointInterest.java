@@ -22,7 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "point_interest")
-@SequenceGenerator(name = "point_interest_id_seq", initialValue = 1, allocationSize = 100)
+@SequenceGenerator(name = "point_interest_id_seq", initialValue = 1, allocationSize = 1)
 public class PointInterest implements Serializable {
 
     @Id
@@ -36,10 +36,10 @@ public class PointInterest implements Serializable {
     private Double radius;
 
     @Column(name = "latitude")
-    private Double latitude;
+    private Long latitude;
 
     @Column(name = "longitude")
-    private Double longitude;
+    private Long longitude;
 
     public Integer getId() {
         return id;
@@ -65,19 +65,19 @@ public class PointInterest implements Serializable {
         this.radius = radius;
     }
 
-    public Double getLatitude() {
+    public Long getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(Long latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public Long getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(Long longitude) {
         this.longitude = longitude;
     }
 

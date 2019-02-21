@@ -29,7 +29,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  */
 @Entity
 @Table(name = "positions")
-@SequenceGenerator(name = "positions_id_seq", initialValue = 1, allocationSize = 10000)
+@SequenceGenerator(name = "positions_id_seq", initialValue = 1, allocationSize = 1)
 @EntityListeners(AuditingEntityListener.class)
 public class Position implements Serializable {
 
@@ -44,10 +44,10 @@ public class Position implements Serializable {
     private Double velocity;
 
     @Column(name = "longitude")
-    private Double longitude;
+    private Long longitude;
 
     @Column(name = "latitude")
-    private Double latitude;
+    private Long latitude;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
@@ -80,19 +80,19 @@ public class Position implements Serializable {
         this.velocity = velocity;
     }
 
-    public Double getLongitude() {
+    public Long getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(Long longitude) {
         this.longitude = longitude;
     }
 
-    public Double getLatitude() {
+    public Long getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(Long latitude) {
         this.latitude = latitude;
     }
 

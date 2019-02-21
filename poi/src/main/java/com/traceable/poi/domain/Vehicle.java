@@ -27,7 +27,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  */
 @Entity
 @Table(name = "vehicle")
-@SequenceGenerator(name = "vehicle_id_seq", initialValue = 1, allocationSize = 100)
+@SequenceGenerator(name = "vehicle_id_seq", initialValue = 1, allocationSize = 1)
 @EntityListeners(AuditingEntityListener.class)
 public class Vehicle implements Serializable {
 
