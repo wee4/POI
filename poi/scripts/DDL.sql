@@ -111,6 +111,7 @@ CREATE TABLE public.parking
     id serial NOT NULL,
     point_interest_id integer NOT NULL,
     vehicle_id integer NOT NULL,
+    time_parking double precision,
     CONSTRAINT parking_pkey PRIMARY KEY (id),
   CONSTRAINT fk_point_interest_id FOREIGN KEY (point_interest_id)
       REFERENCES public.point_interest (id) MATCH SIMPLE
