@@ -51,6 +51,10 @@ public class Controller {
         Optional<Vehicle> vehicle = vehicleRepository.findById(vehicleId);
         Vehicle v = vehicle.get();
         List<Meeting> list = meetingRepository.findAll();
+        
+        /**
+         * Usado removeif temporariamente até implementar as consultas especializadas através do repository
+         */
         list.removeIf((Meeting t) -> !t.getPosition().getVehicle().equals(v));
 
         if (startDate != null) {

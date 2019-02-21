@@ -6,18 +6,26 @@
 package com.traceable.poi.services;
 
 import com.traceable.poi.domain.Meeting;
+import com.traceable.poi.domain.ParkingTime;
 import com.traceable.poi.domain.PointInterest;
 import com.traceable.poi.domain.Position;
+import com.traceable.poi.domain.Vehicle;
 import com.traceable.poi.repositories.MeetingRepository;
+import com.traceable.poi.repositories.ParkingTimeRepository;
 import com.traceable.poi.repositories.PointInterestRepository;
 import com.traceable.poi.repositories.PositionRepository;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,14 +46,30 @@ public class PoiService {
     @Autowired
     private PointInterestRepository interestRepository;
 
+    @Autowired
+    private ParkingTimeRepository parkingTimeRepository;
+    
+    
+    /**
+     * 
+     * @return 
+     */
     public List<Meeting> calculate() {
         List<Position> positions = positionRepository.findAll();
         List<PointInterest> interests = interestRepository.findAll();
         List<Meeting> generatedMeetings = generateMeetings(positions, interests);
+        
+        generateParkings(generatedMeetings, interests);
 
         return generatedMeetings;
     }
 
+    /**
+     *
+     * @param positions
+     * @param interests
+     * @return
+     */
     private List<Meeting> generateMeetings(List<Position> positions, List<PointInterest> interests) {
         List<Meeting> lst = new ArrayList<>();
 
@@ -68,6 +92,12 @@ public class PoiService {
         return lst;
     }
 
+    /**
+     *
+     * @param pos
+     * @param interests
+     * @return
+     */
     private boolean verifyMeeting(Position pos, PointInterest interests) {
 
         //double earthRadius = 3958.75;//miles
@@ -80,9 +110,56 @@ public class PoiService {
                 * Math.cos(Math.toRadians(interests.getLatitude()));
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-
         Boolean b = c < interests.getRadius();
         return b;
     }
-    
+
+    /**
+     *
+     * @param generatedMeetings
+     * @param interests
+     * Método que calcula em minutos, o quanto cada carro ficoudentro de um ponto
+     */
+    private void generateParkings(List<Meeting> generatedMeetings, List<PointInterest> interests) {
+        List<ParkingTime> parkingTimes = new ArrayList<>();
+
+        interests.forEach((PointInterest pi) -> {
+
+            generatedMeetings.stream().filter((Meeting t) -> t.getInterest().equals(pi));
+
+            Collection<Vehicle> vehicles = CollectionUtils.collect(generatedMeetings, (Meeting meeting) -> meeting.getPosition().getVehicle());
+            Set<Vehicle> set = new HashSet<>(vehicles);
+
+            for (Vehicle vehicle : set) {
+
+                generatedMeetings.stream().filter((Meeting t) -> t.getPosition().getVehicle().equals(vehicle));
+
+                generatedMeetings.sort((Meeting o1, Meeting o2) -> o1.getPosition().getSentDate().compareTo(o2.getPosition().getSentDate()));
+
+                Date firstDateOnThisPoint = generatedMeetings.stream().findFirst().get().getPosition().getSentDate();
+                Date lastDateOnThisPoint = generatedMeetings.get(generatedMeetings.size() - 1).getPosition().getSentDate();
+
+                long parkingTime = getDateDiff(firstDateOnThisPoint, lastDateOnThisPoint, TimeUnit.MINUTES);
+
+                ParkingTime p = new ParkingTime();
+                p.setInterest(pi);
+                p.setVehicle(vehicle);
+                p.setTimeParking(parkingTime);
+
+                parkingTimes.add(p);
+            }
+        });
+
+        try {
+            parkingTimeRepository.saveAll(parkingTimes);
+        } catch (Exception e) {
+            LOG.error("Exception on save: {}", e);
+        }
+    }
+
+    private static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
 }

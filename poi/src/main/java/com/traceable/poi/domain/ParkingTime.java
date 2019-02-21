@@ -19,6 +19,7 @@ import javax.persistence.Table;
 /**
  *
  * @author Wesley
+ * Classe criada para salvar relação e duração que um carro permanece dentro de um ponto
  */
 @Entity
 @Table(name = "parking")
@@ -37,7 +38,7 @@ public class ParkingTime implements Serializable {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
     
-    @Column("time_parking")
+    @Column(name = "time_parking")
     private Long timeParking;
 
     public Integer getId() {
