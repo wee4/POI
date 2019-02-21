@@ -84,5 +84,5 @@ public class PoiService {
         Boolean b = c < interests.getRadius();
         return b;
     }
-
+    
 }

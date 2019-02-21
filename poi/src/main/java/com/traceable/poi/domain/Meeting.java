@@ -37,7 +37,7 @@ public class Meeting implements Serializable {
     @ManyToOne
     @JoinColumn(name = "position_id")
     private Position position;
-
+    
     public Integer getId() {
         return id;
     }

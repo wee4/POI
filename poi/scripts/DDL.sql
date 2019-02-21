@@ -86,16 +86,43 @@ CREATE TABLE public.meeting
     id serial NOT NULL,
     point_interest_id integer NOT NULL,
     position_id integer NOT NULL,
-    CONSTRAINT meeting_pkey PRIMARY KEY (id),
-        CONSTRAINT fk_point_interest_id FOREIGN KEY (point_interest_id)
-        REFERENCES public.point_interest (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
+      CONSTRAINT meeting_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_point_interest_id FOREIGN KEY (point_interest_id)
+      REFERENCES public.point_interest (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_position_id FOREIGN KEY (position_id)
+      REFERENCES public.positions (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 WITH (
     OIDS = FALSE
 )
 TABLESPACE pg_default;
 
 ALTER TABLE public.meeting
+    OWNER to postgres;
+
+
+CREATE SEQUENCE parking_id_seq;
+
+-- Table: public.parking
+-- DROP TABLE public.parking;
+CREATE TABLE public.parking
+(
+    id serial NOT NULL,
+    point_interest_id integer NOT NULL,
+    vehicle_id integer NOT NULL,
+    CONSTRAINT parking_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_point_interest_id FOREIGN KEY (point_interest_id)
+      REFERENCES public.point_interest (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_vehicle_id FOREIGN KEY (vehicle_id)
+      REFERENCES public.vehicle (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.parking
     OWNER to postgres;
